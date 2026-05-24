@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Quiz Result
+{% endblock %}
+
+{% block main %}
+    <h2 class="mb-4">Quiz Result</h2>
+
+    <div class="alert alert-info text-center" role="alert">
+        <h3>You scored {{ score }} out of {{ total_questions }}!</h3>
+    </div>
+
+    {% if updated_spaced_repetition %}
+        <div class="alert alert-success text-center" role="alert">
+            <strong><i class="bi bi-robot"></i> Smart Assistant:</strong> Your quiz score has been automatically logged and your Spaced Repetition interval for this topic has been updated based on your performance!
+        </div>
+    {% endif %}
+
+    <p class="text-center">
+        <a href="/quiz" class="btn btn-primary me-2">Take Another Quiz</a>
+        <a href="/planner" class="btn btn-secondary">Go to Study Planner</a>
+    </p>
+
+{% endblock %}

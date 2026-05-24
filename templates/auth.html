@@ -1,0 +1,185 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Authentication
+{% endblock %}
+
+{% block main %}
+<div class="auth-container mx-auto mt-4 mb-5 position-relative">
+    
+    <!-- Tab Toggle -->
+    <div class="d-flex justify-content-center mb-4">
+        <div class="btn-group rounded-pill p-1" style="background: rgba(255,255,255,0.1);" role="group">
+            <button type="button" id="tab-login" class="btn btn-sm rounded-pill px-4 fw-bold {% if active_tab == 'login' %}btn-primary{% else %}text-light border-0{% endif %}" onclick="switchTab('login')">Login</button>
+            <button type="button" id="tab-register" class="btn btn-sm rounded-pill px-4 fw-bold {% if active_tab == 'register' %}btn-primary{% else %}text-light border-0{% endif %}" onclick="switchTab('register')">Register</button>
+        </div>
+    </div>
+
+    <!-- Header matching the mock image layout -->
+    <div class="text-center mb-4">
+        <div class="d-flex justify-content-center align-items-center mb-2">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="48" height="48" style="border-radius: 12px;" class="me-3">
+            <h2 class="mb-0 fw-bold">StudyForge</h2>
+        </div>
+        <p class="fw-bold small mt-3 text-uppercase text-light" style="letter-spacing: 2px;">User Portal</p>
+    </div>
+
+    <!-- Login Form -->
+    <form id="form-login" action="/login" method="post" class="d-flex flex-column gap-3" style="{% if active_tab != 'login' %}display: none !important;{% endif %}">
+        <div class="form-group text-start">
+            <label for="login-username" class="form-label text-light small fw-bold mb-1">Username</label>
+            <input autocomplete="off" autofocus class="form-control rounded-pill px-4 py-2 text-white" style="background: rgba(255,255,255,0.15);" id="login-username" name="username" type="text" required>
+        </div>
+        
+        <div class="form-group text-start">
+            <label for="login-password" class="form-label text-light small fw-bold mb-1">Password</label>
+            <div class="input-group">
+                <input class="form-control px-4 py-2 text-white border-end-0" style="border-radius: 50rem 0 0 50rem; background: rgba(255,255,255,0.15);" id="login-password" name="password" type="password" required>
+                <button class="btn border border-start-0" type="button" style="border-radius: 0 50rem 50rem 0; background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.1);" onclick="togglePassword('login-password', 'eye-icon-login')">
+                    <span id="eye-icon-login" class="text-light d-flex align-items-center justify-content-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="text-end mb-2">
+            <a href="/reset_password" class="text-warning small text-decoration-none fw-bold">Forgot Password?</a>
+        </div>
+
+        <button class="btn btn-primary rounded-pill py-2 mt-2 w-100 fw-bold shadow-lg" type="submit">Sign In</button>
+    </form>
+
+    <!-- Register Form -->
+    <form id="form-register" action="/register" method="post" class="d-flex flex-column gap-3" style="{% if active_tab != 'register' %}display: none !important;{% endif %}">
+        <div class="form-group text-start position-relative">
+            <label for="register-username" class="form-label text-light small fw-bold mb-1">Username</label>
+            <input autocomplete="off" class="form-control rounded-pill px-4 py-2 text-white" style="background: rgba(255,255,255,0.15);" id="register-username" name="username" type="text" required>
+            <small id="username-feedback" class="position-absolute end-0 bottom-0 mb-3 me-4 fw-bold"></small>
+        </div>
+        
+        <div class="form-group text-start">
+            <label for="register-password" class="form-label text-light small fw-bold mb-1">Password</label>
+            <div class="input-group">
+                <input class="form-control px-4 py-2 text-white border-end-0" style="border-radius: 50rem 0 0 50rem; background: rgba(255,255,255,0.15);" id="register-password" name="password" type="password" required>
+                <button class="btn border border-start-0" type="button" style="border-radius: 0 50rem 50rem 0; background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.1);" onclick="togglePassword('register-password', 'eye-icon-reg')">
+                    <span id="eye-icon-reg" class="text-light d-flex align-items-center justify-content-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group text-start">
+            <label for="register-confirmation" class="form-label text-light small fw-bold mb-1">Confirm Password</label>
+            <div class="input-group">
+                <input class="form-control px-4 py-2 text-white border-end-0" style="border-radius: 50rem 0 0 50rem; background: rgba(255,255,255,0.15);" id="register-confirmation" name="confirmation" type="password" required>
+                <button class="btn border border-start-0" type="button" style="border-radius: 0 50rem 50rem 0; background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.1);" onclick="togglePassword('register-confirmation', 'eye-icon-conf')">
+                    <span id="eye-icon-conf" class="text-light d-flex align-items-center justify-content-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <button class="btn btn-primary rounded-pill py-2 mt-4 w-100 fw-bold shadow-lg" type="submit">Create Account</button>
+    </form>
+
+    <!-- Back to Landing Page Button -->
+    <a href="/" class="btn btn-outline-light rounded-pill py-2 w-100 fw-bold mt-4" style="border-color: rgba(255,255,255,0.2);">
+        Back to Landing Page
+    </a>
+
+</div>
+
+<script>
+    // Tab Switching Logic
+    function switchTab(tab) {
+        const loginForm = document.getElementById('form-login');
+        const regForm = document.getElementById('form-register');
+        const loginBtn = document.getElementById('tab-login');
+        const regBtn = document.getElementById('tab-register');
+
+        if (tab === 'login') {
+            loginForm.style.setProperty('display', 'flex', 'important');
+            regForm.style.setProperty('display', 'none', 'important');
+            loginBtn.classList.add('btn-primary');
+            loginBtn.classList.remove('text-light', 'border-0');
+            regBtn.classList.remove('btn-primary');
+            regBtn.classList.add('text-light', 'border-0');
+        } else {
+            regForm.style.setProperty('display', 'flex', 'important');
+            loginForm.style.setProperty('display', 'none', 'important');
+            regBtn.classList.add('btn-primary');
+            regBtn.classList.remove('text-light', 'border-0');
+            loginBtn.classList.remove('btn-primary');
+            loginBtn.classList.add('text-light', 'border-0');
+        }
+    }
+
+    // Password Toggle Logic
+    function togglePassword(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.style.opacity = "0.5";
+        } else {
+            input.type = "password";
+            icon.style.opacity = "1";
+        }
+    }
+
+    // Real-time Username Checking Logic
+    let typingTimer;
+    const doneTypingInterval = 500; // wait 500ms after user stops typing
+    const usernameInput = document.getElementById('register-username');
+    const feedback = document.getElementById('username-feedback');
+
+    usernameInput.addEventListener('keyup', () => {
+        clearTimeout(typingTimer);
+        feedback.innerText = '';
+        if (usernameInput.value) {
+            feedback.innerText = 'Checking...';
+            feedback.className = 'position-absolute end-0 bottom-0 mb-3 me-4 text-muted small fw-bold';
+            typingTimer = setTimeout(checkUsername, doneTypingInterval);
+        }
+    });
+
+    usernameInput.addEventListener('keydown', () => {
+        clearTimeout(typingTimer);
+    });
+
+    async function checkUsername() {
+        const username = usernameInput.value;
+        if (!username) return;
+
+        try {
+            const response = await fetch('/api/check_username?username=' + encodeURIComponent(username));
+            const data = await response.json();
+
+            if (data.available) {
+                feedback.innerText = 'Available ✓';
+                feedback.className = 'position-absolute end-0 bottom-0 mb-3 me-4 text-success small fw-bold';
+                usernameInput.style.borderColor = '#198754';
+            } else {
+                feedback.innerText = 'Taken ✗';
+                feedback.className = 'position-absolute end-0 bottom-0 mb-3 me-4 text-danger small fw-bold';
+                usernameInput.style.borderColor = '#dc3545';
+            }
+        } catch (error) {
+            console.error("Error checking username", error);
+            feedback.innerText = '';
+        }
+    }
+</script>
+{% endblock %}
