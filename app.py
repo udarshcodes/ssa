@@ -26,11 +26,14 @@ app = Flask(__name__)
 
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+app.secret_key = os.environ.get("SECRET_KEY", "fallback_dev_key")
 Session(app)
 
+db_url = os.environ.get("DATABASE_URL")
+if db_url and db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
 
-db = SQL(os.environ.get("DATABASE_URL") if os.environ.get(
-    "DATABASE_URL") else "sqlite:///database.db")
+db = SQL(db_url if db_url else "sqlite:///database.db")
 
 
 @app.after_request

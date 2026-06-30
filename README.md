@@ -23,12 +23,12 @@ StudyForge is a lightweight study management application designed for students w
 | Layer | Technology |
 | :--- | :--- |
 | Frontend | HTML5, CSS3, Vanilla JavaScript, Bootstrap 5 |
-| Backend | Python, Flask |
-| Database | SQLite (via CS50's SQL library) |
+| Backend | Python, Flask, Gunicorn |
+| Database | SQLite (local) / PostgreSQL (production) |
 | Session Management | Flask-Session (Filesystem) |
 
 ## Architecture
-The application follows a standard monolithic client-server architecture. The browser client interacts with a Flask web server, which handles all routing, user authentication, and business logic. The backend communicates directly with a local SQLite database (`database.db`) to store user profiles, courses, topics, study sessions, and quiz attempts. Session data is stored locally on the server's filesystem.
+The application follows a standard monolithic client-server architecture. The browser client interacts with a Flask web server, which handles all routing, user authentication, and business logic. The backend communicates directly with a local SQLite database (`database.db`) during development, or a managed PostgreSQL database in production, to store user profiles, courses, topics, study sessions, and quiz attempts. Session data is stored locally on the server's filesystem.
 
 ## Running Locally
 
@@ -63,14 +63,17 @@ The application follows a standard monolithic client-server architecture. The br
 ## Project Structure
 ```text
 .
+├── Procfile               # Gunicorn deployment configuration
 ├── app.py                 # Main Flask application entry point
 ├── schema.sql             # SQLite database schema definition
+├── schema_postgres.sql    # PostgreSQL schema for production
 ├── requirements.txt       # Python dependencies
 ├── static/
 │   ├── css/
 │   │   └── style.css      # Global styles and spatial UI/glassmorphism design
 │   ├── images/
 │   │   ├── logo.png       # Application logo
+│   │   ├── hero_bg.png    # Alternate background image
 │   │   └── hero_bg_study.png # Homepage academic background image
 │   └── js/
 │       └── script.js      # Frontend logic for fetching dashboard analytics
@@ -84,6 +87,9 @@ The application follows a standard monolithic client-server architecture. The br
     ├── take_quiz.html     # Active quiz interface
     └── quiz_result.html   # Post-quiz results screen
 ```
+
+## Deployment
+StudyForge is configured for easy deployment on Render. Simply create a PostgreSQL instance, a Web Service linked to the repo, and set the `DATABASE_URL` and `SECRET_KEY` environment variables. Initialize the database using the provided `schema_postgres.sql`.
 
 ## Key Decisions & What I Learned
 * **SQLite for Simplicity:** Chose SQLite as the database engine to keep the application lightweight and entirely self-contained, avoiding the overhead of running a separate database server.
