@@ -5,7 +5,7 @@
 </div>
 
 ## Live Demo
-Currently, there is no public live demo available. The application is designed to be run locally.
+A live demo of the application is available at: [https://studyforge-a99i.onrender.com/](https://studyforge-a99i.onrender.com/)
 
 ## About
 StudyForge is a lightweight study management application designed for students who want to organize their learning and test their knowledge. It was originally built as a CS50 final project to explore web development using Python and Flask. The scope is focused on essential study tools—specifically, tracking study sessions with a basic spaced repetition algorithm and generating simple multiple-choice quizzes to reinforce material.
@@ -95,4 +95,4 @@ StudyForge is configured for easy deployment on Render. Simply create a PostgreS
 * **SQLite for Simplicity:** Chose SQLite as the database engine to keep the application lightweight and entirely self-contained, avoiding the overhead of running a separate database server.
 * **Server-Side Rendering:** Used Jinja2 templates instead of a modern frontend framework like React. This reduced complexity for a project of this scope and allowed for faster iteration on the core spaced repetition logic.
 * **Basic Spaced Repetition Algorithm:** Implemented a simplified version of the SuperMemo-2 algorithm. Balancing the math for the interval calculations was challenging but necessary to ensure the scheduling felt natural to the user.
-* **Vanilla CSS Glassmorphism:** Chose to write custom CSS for the recent redesign rather than relying heavily on utility libraries, allowing for fine-grained control over the backdrop filters and spatial UI depth effects.
+* **Apple-Style Glassmorphism:** Chose to write custom CSS for the recent redesign to implement a premium liquid crystal glassmorphic aesthetic. This allowed for fine-grained control over the heavy backdrop filters, lighting borders, and dynamic hover effects without relying strictly on Bootstrap utilities.

@@ -1,25 +1,55 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Quiz Result
+    Quiz Results
 {% endblock %}
 
 {% block main %}
-    <h2 class="mb-4">Quiz Result</h2>
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="glass-card text-center p-5 position-relative overflow-hidden">
+            
+            {% set percentage = (score / total_questions) * 100 %}
+            
+            <!-- Dynamic Background Glow -->
+            <div class="position-absolute top-50 start-50 translate-middle w-100 h-100" style="z-index: 0; opacity: 0.15; filter: blur(60px); pointer-events: none;
+                background: {% if percentage >= 80 %}var(--success){% elif percentage >= 50 %}var(--warning){% else %}var(--danger){% endif %};">
+            </div>
 
-    <div class="alert alert-info text-center" role="alert">
-        <h3>You scored {{ score }} out of {{ total_questions }}!</h3>
-    </div>
+            <div class="position-relative" style="z-index: 1;">
+                <h1 class="mb-2">Quiz Results</h1>
+                
+                <div class="display-1 fw-bold mt-4 mb-3" style="color: {% if percentage >= 80 %}#34d399{% elif percentage >= 50 %}#fcd34d{% else %}#f87171{% endif %};">
+                    {{ score }} <span class="fs-3 text-muted">/ {{ total_questions }}</span>
+                </div>
+                
+                <h4 class="mb-4">
+                    {% if percentage >= 80 %}
+                        Outstanding! You've mastered this material. 🏆
+                    {% elif percentage >= 60 %}
+                        Good job! A solid grasp, but room for review. 👍
+                    {% elif percentage >= 40 %}
+                        Keep going! Some review is needed. 📚
+                    {% else %}
+                        Tough one! Focus heavily on this material next session. 💪
+                    {% endif %}
+                </h4>
 
-    {% if updated_spaced_repetition %}
-        <div class="alert alert-success text-center" role="alert">
-            <strong><i class="bi bi-robot"></i> Smart Assistant:</strong> Your quiz score has been automatically logged and your Spaced Repetition interval for this topic has been updated based on your performance!
+                {% if updated_spaced_repetition %}
+                    <div class="alert alert-success d-inline-block shadow-sm" role="alert" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill me-2" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                        </svg>
+                        <strong>Spaced Repetition Updated!</strong> A study session was automatically logged based on this score, adjusting your next review date.
+                    </div>
+                {% endif %}
+
+                <div class="mt-5">
+                    <a href="/quiz" class="btn btn-primary px-4 py-2 me-2">Back to Quizzes</a>
+                    <a href="/planner" class="btn btn-secondary px-4 py-2">Go to Planner</a>
+                </div>
+            </div>
         </div>
-    {% endif %}
-
-    <p class="text-center">
-        <a href="/quiz" class="btn btn-primary me-2">Take Another Quiz</a>
-        <a href="/planner" class="btn btn-secondary">Go to Study Planner</a>
-    </p>
-
+    </div>
+</div>
 {% endblock %}

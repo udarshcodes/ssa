@@ -1,98 +1,146 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Quiz
+    Quiz Management
 {% endblock %}
 
 {% block main %}
-    <h2 class="mb-4">Quiz Module</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Quiz Forge</h2>
+    </div>
 
-    <div class="card mb-4">
-        <div class="card-header bg-warning text-dark">
-            Add New Question
+    <div class="row g-4 mb-5">
+        
+        <!-- Add Question -->
+        <div class="col-md-6">
+            <div class="glass-card h-100 position-relative overflow-hidden" style="border-top: 3px solid var(--secondary);">
+                <div class="glass-card-header text-white" style="border-bottom: none;">
+                    Add New Question
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="var(--secondary)" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"/>
+                    </svg>
+                </div>
+                <form action="/quiz" method="post" class="mt-2">
+                    <input type="hidden" name="action" value="add_question">
+                    
+                    <div class="mb-3">
+                        <select class="form-select" name="topic_id" required>
+                            <option value="">Select Topic for Question</option>
+                            {% for topic in topics %}
+                                <option value="{{ topic.id }}">{{ topic.course_name }} - {{ topic.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <textarea class="form-control" name="question_text" placeholder="Enter the question text here..." rows="3" required></textarea>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <input type="text" class="form-control" name="option_a" placeholder="Option A (Required)" required>
+                        </div>
+                        <div class="col-6">
+                            <input type="text" class="form-control" name="option_b" placeholder="Option B (Required)" required>
+                        </div>
+                        <div class="col-6">
+                            <input type="text" class="form-control" name="option_c" placeholder="Option C (Optional)">
+                        </div>
+                        <div class="col-6">
+                            <input type="text" class="form-control" name="option_d" placeholder="Option D (Optional)">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Correct Option</label>
+                        <select class="form-select" name="correct_option" required>
+                            <option value="">Select Correct Answer</option>
+                            <option value="A">Option A</option>
+                            <option value="B">Option B</option>
+                            <option value="C">Option C</option>
+                            <option value="D">Option D</option>
+                        </select>
+                    </div>
+
+                    <div class="text-end">
+                        <button class="btn btn-primary px-4" type="submit">Add Question</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="card-body">
-            <form action="/quiz" method="post">
-                <input type="hidden" name="action" value="add_question">
-                <div class="mb-3">
-                    <select class="form-select w-auto mx-auto" name="topic_id" required>
-                        <option value="">Select Topic for Question</option>
-                        {% for topic in topics %}
-                            <option value="{{ topic.id }}">{{ topic.course_name }} - {{ topic.name }}</option>
-                        {% endfor %}
-                    </select>
+
+        <!-- Start Quiz -->
+        <div class="col-md-6">
+            <div class="glass-card h-100 position-relative overflow-hidden d-flex flex-column justify-content-between" style="border-top: 3px solid var(--warning);">
+                <div>
+                    <div class="glass-card-header text-white" style="border-bottom: none;">
+                        Start a Quiz
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="var(--warning)" viewBox="0 0 16 16">
+                            <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2zm1 12h2V2h-2v12zm-3 0V7H7v7h2zm-5 0v-3H2v3h2z"/>
+                        </svg>
+                    </div>
+                    <p class="text-muted small lh-lg">Test your knowledge. Quizzes consist of up to 10 random questions. Your score will automatically update your Spaced Repetition ease factors and intervals for the related topics.</p>
                 </div>
-                <div class="mb-3">
-                    <textarea class="form-control" name="question_text" placeholder="Question Text" rows="2" required></textarea>
-                </div>
-                <div class="mb-3">
-                    <input type="text" class="form-control" name="option_a" placeholder="Option A" required>
-                </div>
-                <div class="mb-3">
-                    <input type="text" class="form-control" name="option_b" placeholder="Option B" required>
-                </div>
-                <div class="mb-3">
-                    <input type="text" class="form-control" name="option_c" placeholder="Option C (Optional)">
-                </div>
-                <div class="mb-3">
-                    <input type="text" class="form-control" name="option_d" placeholder="Option D (Optional)">
-                </div>
-                <div class="mb-3">
-                    <select class="form-select w-auto mx-auto" name="correct_option" required>
-                        <option value="">Correct Option (A, B, C, D)</option>
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
-                        <option value="D">D</option>
-                    </select>
-                </div>
-                <button class="btn btn-warning" type="submit">Add Question</button>
-            </form>
+                
+                <form action="/quiz" method="post" class="mt-4">
+                    <input type="hidden" name="action" value="start_quiz">
+                    <div class="mb-4">
+                        <label class="form-label">Quiz Scope</label>
+                        <select class="form-select" name="quiz_topic_id">
+                            <option value="all">Mixed (All Topics)</option>
+                            {% for topic in topics %}
+                                <option value="{{ topic.id }}">Only: {{ topic.course_name }} - {{ topic.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button class="btn btn-warning w-100 fw-bold shadow-lg" type="submit" style="color: #451a03; background: #fbbf24; border: none;">Begin Quiz</button>
+                </form>
+            </div>
         </div>
     </div>
 
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-            Generate Quiz
-        </div>
-        <div class="card-body">
-            <form action="/quiz" method="post">
-                <input type="hidden" name="action" value="start_quiz">
-                <div class="mb-3">
-                    <select class="form-select w-auto mx-auto" name="quiz_topic_id" required>
-                        <option value="all">Quiz on All Topics</option>
-                        {% for topic in topics %}
-                            <option value="{{ topic.id }}">Quiz on {{ topic.course_name }} - {{ topic.name }}</option>
+    <!-- Recent Quiz Attempts -->
+    <h3 class="mb-3">Recent Performance</h3>
+    <div class="glass-card overflow-hidden p-0" style="border-color: var(--glass-border);">
+        {% if quiz_attempts %}
+            <div class="table-responsive">
+                <table class="table table-hover table-borderless m-0 align-middle">
+                    <thead style="background: rgba(255,255,255,0.03);">
+                        <tr>
+                            <th class="ps-4 py-3">Date</th>
+                            <th class="py-3">Topic Scope</th>
+                            <th class="text-center py-3">Score</th>
+                            <th class="pe-4 py-3 text-end">Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for attempt in quiz_attempts %}
+                            {% set percentage = (attempt.score / attempt.total_questions) * 100 %}
+                            <tr style="border-top: 1px solid var(--glass-border);">
+                                <td class="ps-4 text-muted">{{ attempt.attempt_date.split()[0] if attempt.attempt_date else 'Unknown' }}</td>
+                                <td class="fw-medium">{{ attempt.topic_name if attempt.topic_name else 'Mixed (All)' }}</td>
+                                <td class="text-center fw-bold">{{ attempt.score }} / {{ attempt.total_questions }}</td>
+                                <td class="pe-4 text-end">
+                                    {% if percentage >= 80 %}
+                                        <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">Excellent</span>
+                                    {% elif percentage >= 60 %}
+                                        <span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3);">Good</span>
+                                    {% elif percentage >= 40 %}
+                                        <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3);">Needs Work</span>
+                                    {% else %}
+                                        <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3);">Poor</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
                         {% endfor %}
-                    </select>
-                </div>
-                <button class="btn btn-primary" type="submit">Start Quiz</button>
-            </form>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5 text-muted">
+                No quiz attempts yet. Start one above!
+            </div>
+        {% endif %}
     </div>
-
-    <h3 class="mt-5 mb-3">Recent Quiz Attempts</h3>
-    {% if quiz_attempts %}
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Topic</th>
-                    <th>Score</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for attempt in quiz_attempts %}
-                    <tr>
-                        <td>{{ attempt.attempt_date }}</td>
-                        <td>{{ attempt.topic_name if attempt.topic_name else 'All Topics' }}</td>
-                        <td>{{ attempt.score }} / {{ attempt.total_questions }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No quiz attempts recorded yet.</p>
-    {% endif %}
 
 {% endblock %}
